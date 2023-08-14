@@ -1,4 +1,5 @@
 import math
+import time
 
 from PIL import Image
 
@@ -98,20 +99,23 @@ def draw_dot(x: int, y: int, dot_size=5.):
 def draw_equation(eq, boldness=5):
     global ox, oy
     for x in range(x_low, x_high):
+        # t = time.time()
         for y in range(y_low, y_high):
             if eq(Interval.from_point(x + .5), Interval.from_point(y + .5)):
                 draw_dot(ox + x, oy + y, boldness / 2)
+        # print(time.time() - t)
 
 
 def segment_eq(x1, y1, x2, y2):
     if x1 > x2:
-        x1, x2 = x2, x1
-    if y1 > y2:
-        y1, y2 = y2, y1
+        x1, y1, x2, y2 = x2, y2, x1, y1
 
-    def eq(x, y):
-        return x1 <= x <= x2 and -y1 >= y >= -y2 and (x - x1) * (y1 - y2) == (y + y1) * (x2 - x1)
-
+    if y1 < y2:
+        def eq(x, y):
+            return x1 <= x <= x2 and -y1 >= y >= -y2 and (x - x1) * (y1 - y2) == (y + y1) * (x2 - x1)
+    else:
+        def eq(x, y):
+            return x1 <= x <= x2 and -y1 <= y <= -y2 and (x - x1) * (y1 - y2) == (y + y1) * (x2 - x1)
     return eq
 
 
@@ -198,11 +202,14 @@ def draw_face(params):
                                               params[9] - params[14] * math.cos(params[11]), 0))
 
     face_eq = composite_or(face_eq,
-                           segment_eq(params[10] - params[17] / 2, params[9] + params[15], params[10] + params[17] / 2,
-                                      params[9] + params[15]),
-                           segment_eq(-params[10] - params[17] / 2, params[9] + params[15], -params[10] + params[17] / 2,
-                                      params[9] + params[15])
-                           )
+                           segment_eq(params[10] - params[17] / 2 * math.cos(params[16]),
+                                      params[9] + params[15] - params[17] / 2 * math.sin(params[16]),
+                                      params[10] + params[17] / 2 * math.cos(params[16]),
+                                      params[9] + params[15] + params[17] / 2 * math.sin(params[16])),
+                           segment_eq(-params[10] - params[17] / 2 * math.cos(params[16]),
+                                      params[9] + params[15] + params[17] / 2 * math.sin(params[16]),
+                                      -params[10] + params[17] / 2 * math.cos(params[16]),
+                                      params[9] + params[15] - params[17] / 2 * math.sin(params[16])))
 
     draw_equation(face_eq, 2)
 
@@ -215,7 +222,7 @@ def main():
     global ox, oy, px
     img = Image.new("1", (x_high - x_low, y_high - y_low), "white")
 
-    px = [[1] * (y_high - y_low) for i in range(x_high - x_low)]
+    px = [[1] * (y_high - y_low) for _ in range(x_high - x_low)]
 
     pixels = img.load()
     ox, oy = -x_low, -y_low
@@ -223,28 +230,28 @@ def main():
     params = [0.5] * 18
 
     params[0] = 80  # radius from center to face corner (intersection point of two ellipses)
-    params[1] = -0.6  # angle from OX to face corner
+    params[1] = 0.2  # angle from OX to face corner
     params[2] = 100  # vertical size of face
     params[3] = 0.4  # upper part of face eccentricity
     params[4] = 0.2  # lower part of face eccentricity
 
     params[5] = 10  # nose length
 
-    params[6] = 60  # mouth vertical pos
-    params[7] = -3  # mouth curvature
-    params[8] = 30  # length of mouth arc
+    params[6] = 70  # mouth vertical pos
+    params[7] = 5  # mouth curvature
+    params[8] = 80  # length of mouth arc
 
-    params[9] = 55  # eyes vertical pos
-    params[10] = 30  # eyes horisontal pos
-    params[11] = 3  # eyes slant
+    params[9] = 45  # eyes vertical pos
+    params[10] = 15  # eyes horisontal pos
+    params[11] = 0.3  # eyes slant
     params[12] = 0.8  # eyes eccentricity
     params[13] = 10  # eyes size
 
-    params[14] = -2  # pupils position
+    params[14] = 2  # pupils position
 
     params[15] = 15  # eyebrows vertical position
-    params[16] = 1  # eyebrows slant
-    params[17] = 11  # eyebrows size
+    params[16] = -0.3  # eyebrows slant
+    params[17] = 15  # eyebrows size
 
     draw_face(params)
 
