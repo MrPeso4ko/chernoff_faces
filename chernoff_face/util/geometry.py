@@ -1,32 +1,10 @@
 import math
 
-from interval import Interval
+from chernoff_face.image import canvas
+from chernoff_face.util.interval import Interval
 
 
-class Canvas:
-    """Two-dimensional array of 1s and 0s, where 0 represent black pixel and 1 represent white pixel"""
-
-    def __init__(self, x_low, x_high, y_low, y_high):
-        """Initializes canvas
-        :param x_low: minimal x coordinate of image
-        :param x_high: maximal x coordinate of image
-        :param y_low: minimal y coordinate of image
-        :param y_high: maximal y coordinate of image"""
-        self.x_low = x_low
-        self.x_high = x_high
-        self.y_low = y_low
-        self.y_high = y_high
-        self.ox, self.oy = -x_low, -y_low
-        self.px = [[1] * (y_high - y_low) for _ in range(x_high - x_low)]
-
-    def __getitem__(self, item):
-        if 0 <= item < len(self.px):
-            return self.px[item]
-        else:
-            raise IndexError
-
-
-def draw_dot(px: Canvas, x: int, y: int, dot_size: float = 5.):
+def draw_dot(px: canvas.Canvas, x: int, y: int, dot_size: float = 5.):
     """Draws dot of size *dot_size* in center *x*, *y* in array *px* in-place
     :param px: Canvas representing image
     :param x: x
@@ -39,14 +17,14 @@ def draw_dot(px: Canvas, x: int, y: int, dot_size: float = 5.):
     return px
 
 
-def draw_equation(px: Canvas, eq, boldness=5.):
+def draw_equation(px: canvas.Canvas, eq, boldness=5.):
     """Draws equation *eq* on canvas *px*. Equation should be a mathematically-defined function which takes
     two arguments x, y and returns True if pont lies on figure and False otherwise"""
     for x in range(px.x_low, px.x_high):
         # t = time.time()
         for y in range(px.y_low, px.y_high):
             if eq(Interval.from_point(x + .5), Interval.from_point(y + .5)):
-                draw_dot(px.ox + x, px.oy + y, boldness / 2)
+                draw_dot(px, px.ox + x, px.oy + y, boldness / 2)
         # print(time.time() - t)
 
 
