@@ -99,7 +99,7 @@ def _prepare_params(parameters: dict) -> list[float]:
     return params
 
 
-def draw_face(parameters: dict = None, caption="") -> face.Face:
+def draw_face(parameters: dict = None, caption: str = "") -> face.Face:
     """
     :param parameters: dictionary of face parameters
     :param caption: face caption (will be written above the face)
@@ -150,7 +150,7 @@ def draw_face(parameters: dict = None, caption="") -> face.Face:
     if parameters is None:
         parameters = {}
     params = _prepare_params(parameters)
-    img = face.Face(-125, 125, -125, 125, caption)
+    img = face.Face(caption)
     ux = lx = 0
     uy = params[2]
     ly = -params[2]
@@ -200,3 +200,5 @@ def draw_face(parameters: dict = None, caption="") -> face.Face:
 
     geometry.draw_equation(img, functions.composite_or(*face_eq), 2)
     return img
+
+
