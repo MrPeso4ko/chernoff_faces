@@ -9,4 +9,4 @@ for i in range(16):  # generate 16 random faces
         d[key] = random.random()
     face = chernoff_face.draw_face(d, caption=str(i))
     faces.append(face)
-chernoff_face.draw_grid(faces, 4, 4, "random_faces.png")
+chernoff_face.draw_grid(faces, 2, 8, "random_faces.png")
