@@ -1,36 +1,38 @@
 import math
 
-from chernoff_face.image import canvas
+from chernoff_face.image import face
 from chernoff_face.util.interval import Interval
 
 
-def draw_dot(px: canvas.Canvas, x: int, y: int, dot_size: float = 5.):
+def draw_dot(px: face.Face, x: int, y: int, dot_size: float = 5.):
     """Draws dot of size *dot_size* in center *x*, *y* in array *px* in-place
-    :param px: Canvas representing image
+    :param px: Face object
     :param x: x
     :param y: y
     :param dot_size: size of dot. Default: 5"""
     for dx in range(int(-dot_size), int(dot_size)):
         for dy in range(int(-dot_size), int(dot_size)):
             if dx ** 2 + dy ** 2 <= dot_size ** 2:
-                px[x + dx][y + dy] = 0
+                try:
+                    px[x + dx][y + dy] = 0
+                except IndexError:
+                    pass
     return px
 
 
-def draw_equation(px: canvas.Canvas, eq, boldness=5.):
-    """Draws equation *eq* on canvas *px*. Equation should be a mathematically-defined function which takes
+def draw_equation(px: face.Face, eq, boldness=5.):
+    """Draws equation *eq* on face canvas *px*. Equation should be a mathematically-defined function which takes
     two arguments x, y and returns True if pont lies on figure and False otherwise"""
     for x in range(px.x_low, px.x_high):
         # t = time.time()
         for y in range(px.y_low, px.y_high):
             if eq(Interval.from_point(x + .5), Interval.from_point(y + .5)):
                 draw_dot(px, px.ox + x, px.oy + y, boldness / 2)
-        # print(time.time() - t)
 
 
 def segment_eq(x1, y1, x2, y2):
     """Segment equation
-    :return eq(x, y) - function which defines segment with ends in (x1, y1) and (x2, y2)"""
+    :return: eq(x, y) - function which defines segment with ends in (x1, y1) and (x2, y2)"""
     if x1 > x2:
         x1, y1, x2, y2 = x2, y2, x1, y1
 
