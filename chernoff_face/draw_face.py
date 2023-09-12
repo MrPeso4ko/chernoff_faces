@@ -25,7 +25,7 @@ face_parameters = [
     "mouth_curvature",
     "mouth_length",
     "eyes_vertical_pos",
-    "eyes_horisontal_pos",
+    "eyes_horizontal_pos",
     "eyes_slant",
     "eyes_eccentricity",
     "eyes_size",
@@ -46,7 +46,7 @@ _params_indexes = {
     "mouth_curvature": 7,
     "mouth_length": 8,
     "eyes_vertical_pos": 9,
-    "eyes_horisontal_pos": 10,
+    "eyes_horizontal_pos": 10,
     "eyes_slant": 11,
     "eyes_eccentricity": 12,
     "eyes_size": 13,
@@ -67,7 +67,7 @@ _params_ranges = {
     "mouth_curvature": (-5, 5),
     "mouth_length": (10, 100),
     "eyes_vertical_pos": (35, 75),
-    "eyes_horisontal_pos": (5, 25),
+    "eyes_horizontal_pos": (5, 25),
     "eyes_slant": (1, 2),
     "eyes_eccentricity": (0.1, 0.9),
     "eyes_size": (10, 30),
@@ -128,9 +128,9 @@ def draw_face(parameters: dict = None, caption: str = "") -> face.Face:
 
     *mouth_length*: length of mouth arc
 
-    *eyes_vertical_pos*: eyes vertical pos
+    *eyes_vertical_pos*: eyes vertical position
 
-    *eyes_horisontal_pos*: eyes horisontal pos
+    *eyes_horizontal_pos*: eyes horizontal position
 
     *eyes_slant*: eyes slant
 
@@ -150,7 +150,7 @@ def draw_face(parameters: dict = None, caption: str = "") -> face.Face:
     if parameters is None:
         parameters = {}
     params = _prepare_params(parameters)
-    img = face.Face(caption)
+    face_canvas = face.Face(caption)
     ux = lx = 0
     uy = params[2]
     ly = -params[2]
@@ -188,17 +188,14 @@ def draw_face(parameters: dict = None, caption: str = "") -> face.Face:
                             params[9] + params[15] + geometry.rotate_y(params[17] / 2, 0, params[16])),
         # right eyebrow
         geometry.segment_eq(-params[10] - params[17] / 2 * math.cos(params[16]),
-                            params[9] + params[15] + params[17] / 2 * math.sin(params[16]),
+                            params[9] + params[15] + geometry.rotate_y(params[17] / 2, 0, params[16]),
                             -params[10] + params[17] / 2 * math.cos(params[16]),
-                            params[9] + params[15] - params[17] / 2 * math.sin(
-                                params[16]))]
+                            params[9] + params[15] - geometry.rotate_y(params[17] / 2, 0, params[16]))]
 
     if -0.7 <= params[7] <= 0.7:
         face_eq.append(geometry.segment_eq(-params[8] / 2, -params[6], params[8] / 2, -params[6]))
     else:
         face_eq.append(geometry.circle_arc_eq(params[6], 150 / params[7], params[8]))
 
-    geometry.draw_equation(img, functions.composite_or(*face_eq), 2)
-    return img
-
-
+    geometry.draw_equation(face_canvas, functions.composite_or(*face_eq), 2)
+    return face_canvas
