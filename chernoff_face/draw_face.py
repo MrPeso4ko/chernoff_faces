@@ -60,7 +60,7 @@ _params_ranges = {
     "radius_to_corner": (70, 90),
     "angle_to_corner": (-0.7, 0.7),
     "vertical_size": (90, 120),
-    "upper_part_eccentricity": (-0.5, 1.5),
+    "upper_part_eccentricity": (-0.5, 0.5),
     "lower_part_eccentricity": (-0.5, 1.5),
     "nose_length": (5, 20),
     "mouth_vertical_pos": (30, 70),
@@ -73,7 +73,7 @@ _params_ranges = {
     "eyes_size": (10, 30),
     "pupils_position": (-10, 10),
     "eyebrows_vertical_pos": (7, 20),
-    "eyebrows_slant": (-0.5, 1),
+    "eyebrows_slant": (-0.5, 0.7),
     "eyebrows_size": (10, 30),
 }
 
