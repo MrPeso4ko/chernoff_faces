@@ -52,7 +52,8 @@ class Face:
         pixels = img.load()
         for x in range(self.x_high - self.x_low):
             for y in range(self.y_high - self.y_low):
-                pixels[x + coords[0], y + coords[1]] = self.px[x][y]
+                if self.px[x][y] == 0:
+                    pixels[x + coords[0], y + coords[1]] = 0
         draw = ImageDraw.Draw(img)
         cap_coords = self._caption_coords()
         draw.text((cap_coords[0] + coords[0], cap_coords[1] + coords[1]), self.caption, font=self.font)
