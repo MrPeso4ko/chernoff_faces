@@ -12,6 +12,9 @@ def map_parameters_to_dataset(parameters: list, dataset: list) -> list[dict]:
     second column - "eyes_horizontal_pos" and "eyes_size" parameters in dict and so on.
     every other parameters will be set to default.
 
+    if '-' is added before parameter name, for example "-eyes_slant", then data mapped to this parameter
+    will be inverted (0 becomes 1, 0.3 becomes 0.7 etc.)
+
     :param parameters: list of lists of column parameters.
     :param dataset: dataset. number of columns should be equal to len(parameters)
     """
@@ -20,6 +23,9 @@ def map_parameters_to_dataset(parameters: list, dataset: list) -> list[dict]:
         data_line_mapped = {}
         for i in range(len(parameters)):
             for param in parameters[i]:
-                data_line_mapped[param] = data_line[i]
+                if param[0] == '-':
+                    data_line_mapped[param[1:]] = 1 - data_line[i]
+                else:
+                    data_line_mapped[param] = data_line[i]
         res.append(data_line_mapped)
     return res
