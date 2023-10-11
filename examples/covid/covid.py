@@ -33,17 +33,17 @@ for country, parameters in zip(countries, face_parameters):
 
 chernoff_face.draw_grid(faces, 3, 5, "covid.png")
 
-map = Image.open("world_map.png")  # manually position some faces on world map
-map = map.convert(mode='1', dither=Image.Dither.NONE).resize((map.width * 3, map.height * 3))
-faces[0].draw_on_image((570, 770), map)
-faces[1].draw_on_image((1147, 1395), map)
-faces[2].draw_on_image((2693, 354), map)
-faces[9].draw_on_image((3107, 1735), map)
-faces[13].draw_on_image((2875, 850), map)
-faces[5].draw_on_image((2273, 1682), map)
-faces[11].draw_on_image((3437, 766), map)
-faces[12].draw_on_image((2540, 1317), map)
-faces[10].draw_on_image((3217, 1140), map)
-faces[8].draw_on_image((1976, 1763), map)
+world_map = Image.open("world_map.png")  # manually position some faces on world map
+world_map = world_map.convert(mode='1', dither=Image.Dither.NONE).resize((world_map.width * 3, world_map.height * 3))
+faces[0].draw_on_image((570, 770), world_map)
+faces[1].draw_on_image((1147, 1395), world_map)
+faces[2].draw_on_image((2693, 354), world_map)
+faces[9].draw_on_image((3107, 1735), world_map)
+faces[13].draw_on_image((2875, 850), world_map)
+faces[5].draw_on_image((2273, 1682), world_map)
+faces[11].draw_on_image((3437, 766), world_map)
+faces[12].draw_on_image((2540, 1317), world_map)
+faces[10].draw_on_image((3217, 1140), world_map)
+faces[8].draw_on_image((1976, 1763), world_map)
 
-map.save("world_map_with_face.png")
+world_map.save("world_map_with_face.png")
